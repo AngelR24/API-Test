@@ -3,5 +3,5 @@ class Movie {
   title: string;
   vote_average: string;
   overview: string;
-  poster_path: string;
+  poster_path: string = "";
 }

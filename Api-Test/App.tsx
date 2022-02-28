@@ -14,7 +14,13 @@ import {
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState<Movie>();
+  const [selectedMovie, setSelectedMovie] = useState<Movie>({
+    id: 0,
+    vote_average: "",
+    title: "",
+    overview: "",
+    poster_path: "",
+  });
   const [modalVisible, setModalVisible] = useState(false);
 
   const poster_url = "https://image.tmdb.org/t/p/w500";
@@ -24,6 +30,7 @@ export default function App() {
 
     const response = await fetch(url);
     const responseJson = (await response.json()).results as Movie[];
+    setSelectedMovie(responseJson[0]);
     setMovies(responseJson);
   };
 
@@ -78,10 +85,18 @@ export default function App() {
         }}
       >
         <View style={styles.container}>
+          {selectedMovie !== null && selectedMovie !== undefined}
           <Image
             style={styles.bigImg}
             source={{ uri: poster_url + selectedMovie.poster_path }}
+            resizeMethod="resize"
+            resizeMode="stretch"
           />
+          <Text style={styles.title}>{selectedMovie.title}</Text>
+          <Text style={styles.ratingBig}>
+            {selectedMovie.vote_average + "/10"}
+          </Text>
+          <Text style={styles.paragraph}>{selectedMovie.overview}</Text>
         </View>
       </Modal>
     </View>
@@ -97,7 +112,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   title: {
-    color: "#FFF",
+    color: "#FFCCD2",
     fontWeight: "bold",
     fontSize: 26,
     marginBottom: 20,
@@ -139,5 +154,17 @@ const styles = StyleSheet.create({
     height: "40%",
     alignSelf: "flex-start",
   },
-  paragraph: {},
+  ratingBig: {
+    color: "#B3541E",
+    marginLeft: "80%",
+    fontSize: 20,
+  },
+  paragraph: {
+    justifyContent: "flex-end",
+    fontSize: 17,
+    textAlign: "left",
+    color: "#FFEDED",
+    marginLeft: 10,
+    marginRight: 10,
+  },
 });
